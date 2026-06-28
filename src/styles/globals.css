@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   Theme tokens.
+   - .dark   : premium near-black with silver accents (default)
+   - .silver : light "Silver + White" luxury theme
+   next-themes toggles the class on <html>.
+   ============================================================================ */
+
+@layer base {
+  .dark {
+    --background: 222 14% 6%;
+    --foreground: 210 20% 96%;
+    --card: 222 14% 9%;
+    --card-foreground: 210 20% 96%;
+    --popover: 222 16% 8%;
+    --popover-foreground: 210 20% 96%;
+    --primary: 210 40% 90%;
+    --primary-foreground: 222 30% 10%;
+    --secondary: 222 12% 16%;
+    --secondary-foreground: 210 20% 92%;
+    --muted: 222 12% 14%;
+    --muted-foreground: 215 14% 62%;
+    --accent: 199 89% 60%;
+    --accent-foreground: 222 30% 8%;
+    --destructive: 0 72% 55%;
+    --destructive-foreground: 210 20% 98%;
+    --border: 222 14% 18%;
+    --input: 222 14% 16%;
+    --ring: 199 89% 60%;
+    --radius: 1rem;
+
+    --glass: 222 20% 12%;
+    --glass-border: 210 30% 80%;
+    --silver-1: 220 16% 70%;
+    --silver-2: 210 20% 88%;
+  }
+
+  .silver {
+    --background: 210 25% 97%;
+    --foreground: 222 30% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 222 30% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222 30% 12%;
+    --primary: 222 30% 14%;
+    --primary-foreground: 210 40% 98%;
+    --secondary: 210 20% 92%;
+    --secondary-foreground: 222 30% 14%;
+    --muted: 210 20% 93%;
+    --muted-foreground: 215 16% 42%;
+    --accent: 199 89% 48%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 72% 50%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 20% 85%;
+    --input: 214 20% 88%;
+    --ring: 199 89% 48%;
+    --radius: 1rem;
+
+    --glass: 0 0% 100%;
+    --glass-border: 214 30% 80%;
+    --silver-1: 214 18% 78%;
+    --silver-2: 210 24% 92%;
+  }
+
+  /* default before hydration -> dark */
+  :root {
+    color-scheme: dark;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  ::selection {
+    background: hsl(var(--accent) / 0.3);
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--muted-foreground) / 0.5);
+  }
+}
+
+@layer components {
+  /* Glassmorphism card surface */
+  .glass {
+    background: hsl(var(--glass) / 0.55);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid hsl(var(--glass-border) / 0.18);
+  }
+
+  .glass-strong {
+    background: hsl(var(--glass) / 0.8);
+    backdrop-filter: blur(28px) saturate(160%);
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    border: 1px solid hsl(var(--glass-border) / 0.22);
+  }
+
+  /* Silver gradient text */
+  .text-silver {
+    background: linear-gradient(
+      135deg,
+      hsl(var(--silver-2)) 0%,
+      hsl(var(--silver-1)) 45%,
+      hsl(var(--foreground)) 100%
+    );
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Ambient gradient lighting blobs */
+  .glow-blob {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(80px);
+    opacity: 0.5;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .card-3d {
+    transform-style: preserve-3d;
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+      box-shadow 0.4s ease;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}

@@ -1,0 +1,16 @@
+name = "anime-stream"
+compatibility_date = "2024-09-23"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"
+
+# Environment variables are configured in the Cloudflare Pages dashboard
+# (Settings -> Environment variables) or via `wrangler pages secret put`.
+# Do NOT commit real secrets here.
+#
+# Required variables:
+#   SUPABASE_URL
+#   SUPABASE_ANON_KEY
+#   SUPABASE_SERVICE_ROLE_KEY
+#   ADMIN_EMAIL
+#   ADMIN_PASSWORD
+#   AUTH_SECRET   (any long random string used to sign the admin session)
