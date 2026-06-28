@@ -17,7 +17,7 @@ const sora = Sora({
   weight: ["400", "500", "600", "700", "800"],
 });
 
-const SITE_NAME = "AniLux — Premium Anime Streaming";
+const SITE_NAME = "Silence Anime — Premium Anime Streaming";
 const SITE_DESC =
   "Stream premium anime in a luxurious, lightning-fast experience. Featured, trending, and newly added series with Hindi Dub support.";
 
@@ -33,14 +33,14 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
   title: {
     default: SITE_NAME,
-    template: "%s · AniLux",
+    template: "%s · Silence Anime",
   },
   description: SITE_DESC,
-  applicationName: "AniLux",
+  applicationName: "Silence Anime",
   keywords: ["anime", "streaming", "hindi dub", "watch anime", "anime online"],
   openGraph: {
     type: "website",
-    siteName: "AniLux",
+    siteName: "Silence Anime",
     title: SITE_NAME,
     description: SITE_DESC,
     url: siteUrl(),

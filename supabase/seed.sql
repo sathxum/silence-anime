@@ -1,5 +1,5 @@
 -- ============================================================================
--- AniLux — Optional sample data
+-- Silence Anime — Optional sample data
 -- Run AFTER setup.sql if you want a populated catalogue to preview the UI.
 -- Safe to skip entirely. Uses public poster images.
 -- ============================================================================

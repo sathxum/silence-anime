@@ -1,5 +1,10 @@
-import type { Anime, Episode, ApiResult } from "@/types";
-import type { AnimeFormValues, EpisodeFormValues } from "@/lib/validation";
+import type { Anime, Episode, ApiResult, Popup, Disclaimer } from "@/types";
+import type {
+  AnimeFormValues,
+  EpisodeFormValues,
+  PopupFormValues,
+  DisclaimerFormValues,
+} from "@/lib/validation";
 
 /**
  * Thin client for the admin API. All admin endpoints are protected by
@@ -43,4 +48,22 @@ export const adminApi = {
       method: "POST",
       body: JSON.stringify({ anime_id: animeId, ordered_ids: orderedIds }),
     }),
+
+  // Popups (notifications)
+  listPopups: () => request<Popup[]>("/api/admin/popups"),
+  createPopup: (data: PopupFormValues) =>
+    request<Popup>("/api/admin/popups", { method: "POST", body: JSON.stringify(data) }),
+  updatePopup: (id: string, data: PopupFormValues) =>
+    request<Popup>(`/api/admin/popups/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+  deletePopup: (id: string) =>
+    request<{ id: string }>(`/api/admin/popups/${id}`, { method: "DELETE" }),
+
+  // Disclaimers
+  listDisclaimers: () => request<Disclaimer[]>("/api/admin/disclaimers"),
+  createDisclaimer: (data: DisclaimerFormValues) =>
+    request<Disclaimer>("/api/admin/disclaimers", { method: "POST", body: JSON.stringify(data) }),
+  updateDisclaimer: (id: string, data: DisclaimerFormValues) =>
+    request<Disclaimer>(`/api/admin/disclaimers/${id}`, { method: "PUT", body: JSON.stringify(data) }),
+  deleteDisclaimer: (id: string) =>
+    request<{ id: string }>(`/api/admin/disclaimers/${id}`, { method: "DELETE" }),
 };

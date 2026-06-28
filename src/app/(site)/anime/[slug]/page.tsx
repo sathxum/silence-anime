@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, Languages, Layers } from "lucide-react";
 import { getAnimeBySlug } from "@/services/anime.service";
+import { getDisclaimersByPlacement } from "@/services/content.service";
 import { EpisodeList } from "@/components/anime/episode-list";
 import { env } from "@/lib/env";
 
@@ -47,6 +48,8 @@ export default async function AnimeDetailPage({
   const { slug } = await params;
   const anime = await getAnimeBySlug(slug);
   if (!anime) notFound();
+
+  const animeDisclaimers = await getDisclaimersByPlacement("anime");
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -134,6 +137,22 @@ export default async function AnimeDetailPage({
             <div className="mt-4 max-w-2xl">
               <EpisodeList episodes={anime.episodes} />
             </div>
+
+            {animeDisclaimers.length > 0 && (
+              <div className="mt-10 max-w-2xl space-y-3">
+                {animeDisclaimers.map((d) => (
+                  <div
+                    key={d.id}
+                    className="rounded-xl border border-border/60 bg-muted/30 p-4 text-xs leading-relaxed text-muted-foreground"
+                  >
+                    {d.title && (
+                      <p className="mb-1 font-semibold text-foreground/80">{d.title}</p>
+                    )}
+                    <p className="whitespace-pre-line">{d.body}</p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>

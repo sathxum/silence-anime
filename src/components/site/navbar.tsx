@@ -36,7 +36,7 @@ export function Navbar() {
             <Play className="h-4 w-4 fill-current" />
           </span>
           <span className="font-display text-xl font-extrabold tracking-tight">
-            Ani<span className="text-primary">Lux</span>
+            Silence<span className="text-primary"> Anime</span>
           </span>
         </Link>
 

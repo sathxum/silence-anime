@@ -1,4 +1,4 @@
-# AGENTS.md — AniLux anime streaming platform
+# AGENTS.md — Silence Anime anime streaming platform
 
 Production Next.js 15 (App Router) anime streaming site deployed to Cloudflare
 Pages with a Supabase Postgres backend. No public auth; a single env-gated

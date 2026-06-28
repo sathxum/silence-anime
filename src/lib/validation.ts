@@ -30,5 +30,37 @@ export const reorderSchema = z.object({
   ordered_ids: z.array(z.string().uuid()).min(1),
 });
 
+export const popupSchema = z.object({
+  title: z.string().trim().max(200).default(""),
+  body: z.string().trim().max(3000).default(""),
+  image_url: z
+    .string()
+    .trim()
+    .url("Image must be a valid URL")
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
+  link_url: z
+    .string()
+    .trim()
+    .url("Link must be a valid URL")
+    .optional()
+    .or(z.literal("").transform(() => undefined)),
+  link_label: z.string().trim().max(60).optional().default("Learn more"),
+  dismiss_after_seconds: z.coerce.number().int().min(1).max(10).default(4),
+  is_active: z.boolean().optional().default(true),
+}).refine((v) => v.title.length > 0 || v.body.length > 0, {
+  message: "Add a title or some body text",
+  path: ["title"],
+});
+
+export const disclaimerSchema = z.object({
+  placement: z.enum(["site", "anime"]),
+  title: z.string().trim().max(200).optional().default(""),
+  body: z.string().trim().min(1, "Disclaimer text is required").max(3000),
+  is_active: z.boolean().optional().default(true),
+});
+
 export type AnimeFormValues = z.input<typeof animeSchema>;
 export type EpisodeFormValues = z.input<typeof episodeSchema>;
+export type PopupFormValues = z.input<typeof popupSchema>;
+export type DisclaimerFormValues = z.input<typeof disclaimerSchema>;

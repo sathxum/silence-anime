@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { Play, Github, Heart } from "lucide-react";
+import { Play, Heart } from "lucide-react";
+import type { Disclaimer } from "@/types";
 
-export function Footer() {
+export function Footer({ disclaimers = [] }: { disclaimers?: Disclaimer[] }) {
   return (
     <footer className="mt-24 border-t border-border bg-card/40">
       <div className="container py-12">
@@ -12,12 +13,12 @@ export function Footer() {
                 <Play className="h-4 w-4 fill-current" />
               </span>
               <span className="font-display text-xl font-extrabold tracking-tight">
-                Ani<span className="text-primary">Lux</span>
+                Silence<span className="text-primary"> Anime</span>
               </span>
             </Link>
             <p className="mt-4 text-sm text-muted-foreground">
-              A premium anime streaming experience. Curated titles, instant search,
-              and a luxurious interface across every device.
+              A premium anime experience. Curated titles, instant search, and a
+              luxurious interface across every device.
             </p>
           </div>
 
@@ -27,15 +28,12 @@ export function Footer() {
               links={[
                 { href: "/#trending", label: "Trending" },
                 { href: "/#latest", label: "Latest" },
-                { href: "/#recent", label: "Recently Added" },
+                { href: "/#browse", label: "Recently Added" },
               ]}
             />
             <FooterCol
               title="Discover"
-              links={[
-                { href: "/#featured", label: "Featured" },
-                { href: "/", label: "Home" },
-              ]}
+              links={[{ href: "/", label: "Home" }]}
             />
             <FooterCol
               title="More"
@@ -44,10 +42,31 @@ export function Footer() {
           </div>
         </div>
 
+        {disclaimers.length > 0 && (
+          <div className="mt-10 space-y-3 border-t border-border pt-6">
+            {disclaimers.map((d) => (
+              <div key={d.id} className="text-xs leading-relaxed text-muted-foreground">
+                {d.title && (
+                  <span className="font-semibold text-foreground/80">{d.title}: </span>
+                )}
+                <span className="whitespace-pre-line">{d.body}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
         <div className="mt-10 flex flex-col items-center justify-between gap-4 border-t border-border pt-6 text-sm text-muted-foreground sm:flex-row">
-          <p>© {new Date().getFullYear()} AniLux. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Silence Anime. All rights reserved.</p>
           <p className="flex items-center gap-1.5">
-            Crafted with <Heart className="h-3.5 w-3.5 fill-primary text-primary" /> for anime fans
+            Crafted with <Heart className="h-3.5 w-3.5 fill-primary text-primary" /> by{" "}
+            <a
+              href="https://x.com/sinket-X"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-foreground transition-colors hover:text-primary"
+            >
+              @sinket-X (sahu)
+            </a>
           </p>
         </div>
       </div>

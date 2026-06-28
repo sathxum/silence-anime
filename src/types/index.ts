@@ -105,3 +105,50 @@ export interface EpisodeClickStat {
 export type ApiResult<T> =
   | { ok: true; data: T }
   | { ok: false; error: string };
+
+// ---------- Popups (notifications) & Disclaimers ---------------------------
+
+export interface Popup {
+  id: string;
+  title: string;
+  body: string;
+  image_url: string | null;
+  link_url: string | null;
+  link_label: string;
+  /** Seconds before the close button appears (1..10). */
+  dismiss_after_seconds: number;
+  is_active: boolean;
+  position: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface PopupInput {
+  title: string;
+  body: string;
+  image_url?: string | null;
+  link_url?: string | null;
+  link_label?: string;
+  dismiss_after_seconds: number;
+  is_active?: boolean;
+}
+
+export type DisclaimerPlacement = "site" | "anime";
+
+export interface Disclaimer {
+  id: string;
+  placement: DisclaimerPlacement;
+  title: string;
+  body: string;
+  is_active: boolean;
+  position: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface DisclaimerInput {
+  placement: DisclaimerPlacement;
+  title?: string;
+  body: string;
+  is_active?: boolean;
+}

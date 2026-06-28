@@ -1,4 +1,4 @@
-# Deployment Guide — AniLux
+# Deployment Guide — Silence Anime
 
 End-to-end, click-by-click. Total time ~10–15 minutes.
 
@@ -42,7 +42,7 @@ the `record_episode_click` / `search_anime` functions, and RLS policies.
 cd anime-stream
 git init
 git add .
-git commit -m "Initial commit: AniLux anime streaming platform"
+git commit -m "Initial commit: Silence Anime anime streaming platform"
 git branch -M main
 git remote add origin https://github.com/YOUR-USERNAME/anime-stream.git
 git push -u origin main

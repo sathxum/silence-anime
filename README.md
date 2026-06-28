@@ -1,178 +1,164 @@
-# AniLux — Premium Anime Streaming Platform
+# 🎌 Silence Anime — Premium Anime Streaming Platform
 
-A production-ready anime streaming website. Premium glassmorphism UI (dark +
-silver themes), a SaaS-grade admin dashboard with per-link click analytics,
-and a fully edge-deployed backend. No user signup/login — only a single
-protected `/admin` route gated by environment-variable credentials.
+A production-ready anime streaming website with a luxurious UI, a full admin
+dashboard, popup notifications, disclaimers, and per-link click analytics.
+Built to run on **Cloudflare Pages** (free tier friendly) with a **Supabase**
+(free tier) database.
 
-> **Note on "streaming":** episode play buttons **redirect** to the external
-> links you provide (they are not embedded). Every click is tracked so the
-> admin dashboard can show which anime and which specific links get the most
-> plays.
+> **How "streaming" works here:** episode **Play** buttons **redirect** to the
+> external links you paste in (Streamtape, Filemoon, your Telegram, anything).
+> The video player is **never embedded** — clean, simple, and exactly as
+> requested.
 
----
-
-## Tech stack
-
-| Layer       | Choice                                                        |
-| ----------- | ------------------------------------------------------------- |
-| Framework   | Next.js 15 (App Router) + React 19 + TypeScript (strict)      |
-| Styling     | TailwindCSS 3 + shadcn-style primitives + Framer Motion       |
-| Icons       | lucide-react                                                  |
-| Drag & drop | @dnd-kit (episode reordering)                                 |
-| Backend     | Cloudflare Pages (edge runtime) + Hono-style route handlers   |
-| Database    | Supabase PostgreSQL (with Row Level Security)                 |
-| Auth        | Stateless HMAC-signed admin session cookie (Web Crypto)       |
-| Validation  | Zod on every write endpoint                                   |
-
-Everything runs on Cloudflare's edge — page routes, API routes, and
-middleware are all `runtime = "edge"`.
+Built with ❤️ by **[@sinket-X (sahu)](https://github.com/sinket-X)**
 
 ---
 
-## What you get
+## ✨ Features
 
-**Public site**
-- Animated hero banner (auto-rotating featured anime)
-- Featured / Trending / Latest / Recently-added rows + full grid
-- 3D-tilt anime cards with hover glow, lazy-loaded optimized posters
-- Anime details page with episode list, automatic **"Hindi Dub"** badge,
-  and play buttons that track clicks then redirect
-- Instant, debounced, realtime search (no page reload)
-- Dark theme + Silver/White luxury theme toggle
-- Full SEO: dynamic metadata, Open Graph, Twitter cards, JSON-LD structured
-  data, `robots.txt`, `sitemap.xml`, canonical URLs
+### Public site
+- **Cinematic hero banner** with auto-rotating featured anime
+- **Trending / Latest / Recently Added** sliders + full searchable grid
+- **Instant search** (debounced, with poster thumbnails)
+- **Anime detail pages** with episode lists, auto **"Hindi Dub"** badges
+- **Play button → redirect** (records a click, then sends the visitor to your link)
+- **Popup notifications** shown one-by-one on site open (see below)
+- **Disclaimers** in the footer and at the end of each anime page
+- **Two premium themes**: dark (default) + silver/white, with a toggle
+- Fully **responsive**, SEO-optimized (sitemap, robots, Open Graph, JSON-LD)
 
-**Admin dashboard (`/admin`)**
-- Premium animated sidebar, fully responsive
-- Overview: total anime, total episodes, total link clicks, recently added,
-  most-clicked anime, quick actions
-- Anime manager: add / edit / delete with search, pagination, confirmation
-  dialogs, loading states, empty states, success toasts
-- Live poster/banner image preview while typing
-- Episode manager per anime: add / edit / delete + **drag-and-drop ordering**
-- **Link analytics:** see how many clicks each anime got and exactly which
-  episode link was clicked how many times
+### 🔔 Popup notifications (admin-controlled)
+- Admin creates popups with a **title, body, optional image, and a link**
+  (e.g. an admin/Telegram link, announcement, etc.)
+- On site open, popups appear **one at a time**, centered, with a premium UI
+- Each popup has a **close button that unlocks after a delay** the admin sets
+  (**1–10 seconds**, shown as a live circular countdown). The default is 4s.
+- Closing one popup advances to the **next**, then the next — for as many as
+  the admin has created
+- Toggle each popup **active/inactive** without deleting it
+
+### 📜 Disclaimers (admin-controlled)
+- Add disclaimers shown **site-wide** (footer) or **at the end of every anime page**
+- Optional heading + body, toggle active/inactive
+
+### 🛠 Admin dashboard (`/admin`)
+- Single login gated by **environment-variable credentials** (no public signup)
+- **Add / edit / delete anime** with live poster & banner preview
+- **Manage episodes** with drag-and-drop reordering
+- **Notifications** and **Disclaimers** managers
+- **Analytics**: total clicks, clicks per anime, and **clicks per episode link**
 
 ---
 
-## Quick start (deploy in ~10 minutes)
+## 🧱 Tech stack
 
-You only need to: **create a Supabase project → copy 3 values → set 5 env
-vars → deploy.** No manual table creation.
+| Layer | Choice |
+|---|---|
+| Framework | Next.js 15 (App Router) + React 19 |
+| Language | TypeScript (strict, zero `any`) |
+| Styling | Tailwind CSS + Framer Motion |
+| Database | Supabase (Postgres) |
+| Hosting | Cloudflare Pages (edge runtime) |
+| Auth | Signed HMAC session cookie (Web Crypto) |
 
-### 1. Create a Supabase project
-- Go to <https://supabase.com> → New project.
-- Once ready, open **Settings → API** and copy:
-  - **Project URL** → `SUPABASE_URL`
-  - **anon public** key → `SUPABASE_ANON_KEY`
-  - **service_role** secret key → `SUPABASE_SERVICE_ROLE_KEY`
+---
 
-### 2. Create the database schema (one command — no manual SQL)
-From the project root, set your DB password (Settings → Database → Database
-password) and run:
+## 🚀 Quick start
+
+> Full, click-by-click instructions are in **[DEPLOYMENT.md](./DEPLOYMENT.md)**.
+> Short version below.
+
+### 1. Set up the database (Supabase)
+1. Create a free project at [supabase.com](https://supabase.com).
+2. Open **SQL Editor**, paste the entire contents of
+   [`supabase/setup.sql`](./supabase/setup.sql), and click **Run**.
+   *(Optional: also run [`supabase/seed.sql`](./supabase/seed.sql) for sample anime.)*
+3. From **Settings → API**, copy your **Project URL**, **anon key**, and
+   **service_role key**.
+
+### 2. Deploy to Cloudflare Pages
+1. Push this repo to GitHub (already done if you're reading this there).
+2. In [Cloudflare Pages](https://pages.cloudflare.com) → **Create → Pages →
+   Connect to Git**, pick this repo.
+3. Build settings:
+   - **Build command:** `npx @cloudflare/next-on-pages`
+   - **Build output directory:** `.vercel/output/static`
+4. Add the **environment variables** below (Settings → Environment variables).
+5. Set the compatibility flag **`nodejs_compat`** (Settings → Functions →
+   Compatibility flags, for both Production and Preview).
+6. Deploy. Done. 🎉
+
+### 3. Log in to admin
+Go to `https://your-site.pages.dev/admin`, log in with the `ADMIN_EMAIL` /
+`ADMIN_PASSWORD` you set, and start adding anime, popups, and disclaimers.
+
+---
+
+## 🔐 Environment variables
+
+| Variable | Required | What it is |
+|---|---|---|
+| `SUPABASE_URL` | ✅ | Project URL from Supabase → Settings → API |
+| `SUPABASE_ANON_KEY` | ✅ | anon public key |
+| `SUPABASE_SERVICE_ROLE_KEY` | ✅ | service_role secret key |
+| `ADMIN_EMAIL` | ✅ | The email you log into `/admin` with |
+| `ADMIN_PASSWORD` | ✅ | The password you log into `/admin` with |
+| `AUTH_SECRET` | ⭐ recommended | Any long random string (signs the admin session) |
+| `NEXT_PUBLIC_SITE_URL` | ⭐ recommended | Your final site URL (for SEO / sitemap) |
+
+See [`.env.example`](./.env.example) for a copy-paste template.
+
+---
+
+## 💻 Local development
 
 ```bash
 npm install
-SUPABASE_URL="https://YOUR-REF.supabase.co" \
-SUPABASE_DB_PASSWORD="your-db-password" \
-npm run db:migrate
-```
-
-This applies everything in `supabase/migrations/` (idempotent — safe to
-re-run). Prefer the dashboard? Just paste the contents of
-`supabase/migrations/0001_init.sql` then `0002_functions.sql` into the
-Supabase **SQL Editor** and run them.
-
-### 3. Push to GitHub
-```bash
-git init && git add . && git commit -m "Initial commit"
-git remote add origin https://github.com/YOU/anime-stream.git
-git push -u origin main
-```
-
-### 4. Connect Cloudflare Pages
-- Cloudflare dashboard → **Workers & Pages → Create → Pages → Connect to Git**.
-- Pick the repo. Set the build config:
-  - **Build command:** `npx @cloudflare/next-on-pages`
-  - **Build output directory:** `.vercel/output/static`
-- Under **Settings → Environment variables**, add the variables below.
-- Under **Settings → Functions → Compatibility flags**, add `nodejs_compat`.
-- Deploy. Every future `git push` auto-deploys.
-
-### 5. Environment variables (set in Cloudflare Pages)
-
-| Variable                    | Required | Description                                  |
-| --------------------------- | -------- | -------------------------------------------- |
-| `SUPABASE_URL`              | ✅       | Supabase project URL                         |
-| `SUPABASE_ANON_KEY`         | ✅       | Supabase anon public key                     |
-| `SUPABASE_SERVICE_ROLE_KEY` | ✅       | Supabase service role secret                 |
-| `ADMIN_EMAIL`               | ✅       | Admin login email                            |
-| `ADMIN_PASSWORD`            | ✅       | Admin login password                         |
-| `AUTH_SECRET`               | ➕       | Long random string to sign sessions (set it) |
-| `NEXT_PUBLIC_SITE_URL`      | ➕       | Your public URL (for SEO/sitemap/OG)         |
-
-Admin credentials live **only** in env vars — never in the database.
-
----
-
-## Local development
-
-```bash
-cp .env.example .env.local   # fill in your values
-npm install
+cp .env.example .env.local   # then fill in your Supabase + admin values
 npm run dev                  # http://localhost:3000
 ```
 
-Preview the actual Cloudflare build locally:
-
+Useful commands:
 ```bash
-npm run preview              # next-on-pages build + wrangler pages dev
+npm run typecheck     # TypeScript check (no errors = good)
+npm run pages:build   # the real Cloudflare build (verify before deploying)
+npm run db:migrate    # apply migrations via Postgres (needs SUPABASE_DB_PASSWORD)
 ```
 
 ---
 
-## Project structure
+## 📁 Project structure
 
 ```
 src/
-├── app/
-│   ├── (site)/              # public site (shares navbar/footer layout)
-│   │   ├── page.tsx         # home
-│   │   └── anime/[slug]/    # details page
-│   ├── admin/               # protected dashboard
-│   │   ├── login/           # only unprotected admin route
-│   │   ├── anime/           # list / new / [id] manage
-│   │   └── analytics/       # click analytics
-│   ├── api/
-│   │   ├── admin/           # protected CRUD (anime, episodes, auth)
-│   │   ├── search/          # public instant search
-│   │   └── track/           # public click tracking
-│   ├── sitemap.ts / robots.ts
-│   └── layout.tsx
-├── components/  (ui / site / anime / admin)
-├── features/                # feature-scoped composition
-├── hooks/  lib/  services/  types/  styles/
-├── middleware.ts            # protects /admin and /api/admin
-supabase/migrations/         # auto-applied SQL schema
-scripts/migrate.mjs          # migration runner
+  app/
+    (site)/        public pages (home, anime detail) + popups & disclaimers
+    admin/         dashboard (anime, episodes, notifications, disclaimers, analytics)
+    api/           edge route handlers (admin CRUD, search, click tracking, popups)
+  components/      UI primitives + site/admin/anime components
+  services/        server-only data access (anime, stats, content)
+  lib/             env, auth, supabase, validation, utils
+  types/           shared TypeScript types (single source of truth)
+supabase/
+  migrations/      versioned SQL
+  setup.sql        all migrations combined (paste into Supabase SQL Editor)
+  seed.sql         optional sample data
 ```
 
 ---
 
-## Security
-- `/admin` and `/api/admin/*` protected by edge middleware (signed httpOnly,
-  Secure, SameSite cookie). Constant-time credential & signature comparison.
-- Service-role key only ever used server-side, behind the auth gate.
-- Zod validation + input sanitization (XSS-blunting, URL allow-listing) on
-  every write. Parameterized Supabase queries (no SQL injection).
-- Best-effort per-IP rate limiting on login, search, and tracking.
-- RLS enabled: anon can only read content and record clicks.
+## 📝 Notes
+
+- **Pinned to Next 15.5.2** because `@cloudflare/next-on-pages` supports up to
+  that version. If you later want a newer Next, migrate to the
+  [OpenNext Cloudflare adapter](https://opennext.js.org/cloudflare).
+- This is an **open-source** project — no GitHub Actions/CI is included on
+  purpose. Cloudflare Pages builds and deploys directly from your repo.
 
 ---
 
-## Notes / upgrade path
-- Pinned to **Next 15.5.2** because `@cloudflare/next-on-pages` currently
-  supports Next ≤ 15.5.2. To move to newer Next, migrate to the
-  [OpenNext Cloudflare adapter](https://opennext.js.org/cloudflare).
-- See `DEPLOYMENT.md` for the detailed step-by-step deploy guide.
+## 📄 License
+
+MIT — free to use, modify, and share.
+
+Built by **[@sinket-X (sahu)](https://github.com/sinket-X)**.

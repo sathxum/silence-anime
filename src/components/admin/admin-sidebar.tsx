@@ -14,6 +14,8 @@ import {
   X,
   Play,
   ExternalLink,
+  Bell,
+  ShieldAlert,
 } from "lucide-react";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
@@ -23,6 +25,8 @@ const NAV = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { href: "/admin/anime", label: "Anime Library", icon: Clapperboard, exact: false },
   { href: "/admin/anime/new", label: "Add Anime", icon: PlusCircle, exact: true },
+  { href: "/admin/popups", label: "Notifications", icon: Bell, exact: false },
+  { href: "/admin/disclaimers", label: "Disclaimers", icon: ShieldAlert, exact: false },
   { href: "/admin/analytics", label: "Analytics", icon: BarChart3, exact: true },
 ];
 
@@ -79,7 +83,7 @@ export function AdminSidebar() {
           <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
             <Play className="h-4 w-4 fill-current" />
           </span>
-          AniLux
+          Silence Anime
         </Link>
         <button
           onClick={() => setMobileOpen(true)}
@@ -142,7 +146,7 @@ function SidebarInner({
         <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-glow">
           <Play className="h-4 w-4 fill-current" />
         </span>
-        AniLux
+        Silence Anime
         <span className="rounded-md bg-primary/15 px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
           Admin
         </span>
