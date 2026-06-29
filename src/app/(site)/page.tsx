@@ -1,27 +1,19 @@
-import { Suspense } from "react";
-import {
-  getFeaturedAnime,
-  getTrendingAnime,
-  getLatestAnime,
-  getAllAnime,
-} from "@/services/anime.service";
+import { getAllAnime } from "@/services/anime.service";
 import { HeroBanner } from "@/components/anime/hero-banner";
 import { AnimeRow } from "@/components/anime/anime-row";
 import { AnimeGrid } from "@/components/anime/anime-grid";
 import { EmptyState } from "@/components/site/empty-state";
+import type { Anime } from "@/types";
 
 export const runtime = "edge";
-export const dynamic = "force-dynamic";
+// Cache the rendered page at the edge for 60s. Visitors get static HTML
+// (near-zero CPU) instead of a fresh DB render on every request — this is
+// what keeps us under Cloudflare's Worker CPU limit.
+export const revalidate = 60;
 
 export default async function HomePage() {
-  const [featured, trending, latest, all] = await Promise.all([
-    getFeaturedAnime(6),
-    getTrendingAnime(14),
-    getLatestAnime(14),
-    getAllAnime(),
-  ]);
-
-  const heroItems = featured.length > 0 ? featured : latest.slice(0, 5);
+  // ONE query — derive every section in memory instead of 4 round trips.
+  const all = await getAllAnime();
 
   if (all.length === 0) {
     return (
@@ -34,11 +26,18 @@ export default async function HomePage() {
     );
   }
 
+  const featured = all.filter((a: Anime) => a.is_featured).slice(0, 6);
+  const trending = all.filter((a: Anime) => a.is_trending).slice(0, 14);
+  const latest = all.slice(0, 14);
+  const heroItems = featured.length > 0 ? featured : latest.slice(0, 5);
+
   return (
     <div className="pb-10">
       {heroItems.length > 0 && <HeroBanner items={heroItems} />}
 
-      <AnimeRow id="trending" title="Trending Now" accent="Hot this week" items={trending} />
+      {trending.length > 0 && (
+        <AnimeRow id="trending" title="Trending Now" accent="Hot this week" items={trending} />
+      )}
       <AnimeRow id="latest" title="Latest Anime" accent="Fresh drops" items={latest} />
 
       <section id="browse" className="container scroll-mt-24 py-10">

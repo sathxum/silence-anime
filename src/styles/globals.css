@@ -145,6 +145,73 @@
     transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
       box-shadow 0.4s ease;
   }
+
+  /* Raised glassy panel — frosted glass that looks lifted off the page,
+     with a top sheen, soft inner light, and layered drop shadow. */
+  .glass-3d {
+    position: relative;
+    background:
+      linear-gradient(
+        160deg,
+        hsl(var(--glass) / 0.75) 0%,
+        hsl(var(--glass) / 0.45) 100%
+      );
+    backdrop-filter: blur(22px) saturate(160%);
+    -webkit-backdrop-filter: blur(22px) saturate(160%);
+    border: 1px solid hsl(var(--glass-border) / 0.16);
+    box-shadow:
+      0 1px 0 0 hsl(var(--glass-border) / 0.28) inset,
+      0 14px 40px -16px rgba(0, 0, 0, 0.65),
+      0 4px 12px -8px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Bright sheen sweeping the top edge of a glass surface. */
+  .glass-3d::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(
+      140deg,
+      hsl(var(--glass-border) / 0.5),
+      transparent 40%,
+      transparent 70%,
+      hsl(var(--accent) / 0.25)
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* Specular highlight blob that floats on top of glass for a wet look. */
+  .glass-spec::after {
+    content: "";
+    position: absolute;
+    top: -30%;
+    left: -10%;
+    width: 60%;
+    height: 70%;
+    background: radial-gradient(
+      ellipse at center,
+      hsl(0 0% 100% / 0.18),
+      transparent 60%
+    );
+    transform: rotate(-12deg);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Floating raised button/pill with depth. */
+  .raised {
+    box-shadow:
+      0 1px 0 0 hsl(0 0% 100% / 0.18) inset,
+      0 10px 24px -12px rgba(0, 0, 0, 0.7),
+      0 2px 6px -2px rgba(0, 0, 0, 0.4);
+  }
 }
 
 @layer utilities {

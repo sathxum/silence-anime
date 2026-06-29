@@ -157,6 +157,37 @@ supabase/
 
 ---
 
+## 🩺 Troubleshooting
+
+### "Error 1102 — Worker exceeded resource limits"
+Cloudflare's **free** plan gives each request only ~10ms of CPU. This app is
+tuned to stay under it:
+- The homepage and anime pages use **edge caching** (`revalidate`), so they're
+  served from cache instead of being re-rendered on every visit.
+- The footer disclaimers and popups load **client-side**, keeping the page
+  render itself near-zero CPU.
+- Click tracking is **fire-and-forget** (`navigator.sendBeacon`) — the user is
+  redirected instantly and the count is sent in the background.
+
+If you still hit 1102 under heavy traffic, the clean long-term fix is to
+**upgrade to the Cloudflare Workers Paid plan** (~$5/mo) which raises the CPU
+limit to 50ms+. No code changes needed — nothing in the app breaks.
+
+### Admin login shows "Something went wrong"
+This almost always means the database isn't reachable. Check:
+1. You ran `supabase/setup.sql` (Table Editor should show `anime`, `episodes`,
+   `popups`, `disclaimers`).
+2. All 5 env vars are set in Cloudflare **and** you redeployed after adding them.
+3. `nodejs_compat` compatibility flag is enabled (Settings → Functions).
+
+### Clicks aren't counting
+Make sure `setup.sql` ran fully — it creates the `record_episode_click`
+function and grants it to the `anon` role. Clicks are sent via `sendBeacon`
+right before the redirect, so they count even though the new tab opens
+instantly.
+
+---
+
 ## 📄 License
 
 MIT — free to use, modify, and share.

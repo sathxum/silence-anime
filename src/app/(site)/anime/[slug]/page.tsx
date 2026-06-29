@@ -9,7 +9,7 @@ import { EpisodeList } from "@/components/anime/episode-list";
 import { env } from "@/lib/env";
 
 export const runtime = "edge";
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export async function generateMetadata({
   params,

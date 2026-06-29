@@ -8,30 +8,39 @@ import type { Episode } from "@/types";
 /**
  * Episode list for the details page. Each card shows the episode number,
  * name, an automatic "Hindi Dub" badge, and a play button. Clicking play
- * records the click (POST /api/track) then redirects to the external link.
- * The player is NOT embedded — we only redirect.
+ * records the click via a fire-and-forget beacon (so it counts even though
+ * we redirect immediately) then opens the external link. Player is never
+ * embedded — we only redirect.
  */
 export function EpisodeList({ episodes }: { episodes: Episode[] }) {
   const [loadingId, setLoadingId] = useState<string | null>(null);
 
-  async function handlePlay(ep: Episode) {
-    if (loadingId) return;
+  function handlePlay(ep: Episode) {
+    // Fire-and-forget click tracking. sendBeacon is NOT cancelled by the
+    // navigation that follows, so the click is reliably counted before/at
+    // redirect — without making the user wait on a round-trip.
     setLoadingId(ep.id);
     try {
-      const res = await fetch("/api/track", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ episode_id: ep.id }),
-      });
-      const json = (await res.json()) as { ok: boolean; redirect_url?: string };
-      const url = json.ok && json.redirect_url ? json.redirect_url : ep.redirect_url;
-      window.open(url, "_blank", "noopener,noreferrer");
+      const payload = JSON.stringify({ episode_id: ep.id });
+      const sent =
+        typeof navigator !== "undefined" &&
+        typeof navigator.sendBeacon === "function" &&
+        navigator.sendBeacon("/api/track", new Blob([payload], { type: "application/json" }));
+      if (!sent) {
+        // Fallback: keepalive fetch also survives navigation.
+        fetch("/api/track", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: payload,
+          keepalive: true,
+        }).catch(() => {});
+      }
     } catch {
-      // Even if tracking fails, still send the user to the episode.
-      window.open(ep.redirect_url, "_blank", "noopener,noreferrer");
-    } finally {
-      setLoadingId(null);
+      /* tracking must never block playback */
     }
+    // Redirect immediately — the click is already on its way.
+    window.open(ep.redirect_url, "_blank", "noopener,noreferrer");
+    setTimeout(() => setLoadingId(null), 600);
   }
 
   if (episodes.length === 0) {

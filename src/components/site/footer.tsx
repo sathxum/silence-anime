@@ -1,8 +1,26 @@
+"use client";
+
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { Play, Heart } from "lucide-react";
 import type { Disclaimer } from "@/types";
 
-export function Footer({ disclaimers = [] }: { disclaimers?: Disclaimer[] }) {
+export function Footer() {
+  const [disclaimers, setDisclaimers] = useState<Disclaimer[]>([]);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch("/api/disclaimers?placement=site", { headers: { Accept: "application/json" } })
+      .then((r) => r.json())
+      .then((j: { ok: boolean; data: Disclaimer[] }) => {
+        if (!cancelled && j.ok) setDisclaimers(j.data);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
   return (
     <footer className="mt-24 border-t border-border bg-card/40">
       <div className="container py-12">
